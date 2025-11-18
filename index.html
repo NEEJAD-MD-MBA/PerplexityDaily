@@ -86,12 +86,31 @@
             padding: 0;
             box-sizing: border-box;
         }
+        
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             font-family: var(--font-family-base);
             background-color: var(--color-background);
             color: var(--color-text);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Improved focus styles for accessibility */
+        *:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+        
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
         }
 
         .header {
@@ -233,11 +252,12 @@
             border-radius: var(--radius-lg);
             padding: var(--space-24);
             box-shadow: var(--shadow-md);
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .stat-card:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08), 0 3px 7px -3px rgba(0, 0, 0, 0.04);
         }
 
         .stat-value {
@@ -258,6 +278,7 @@
             padding: var(--space-24);
             margin-bottom: var(--space-24);
             box-shadow: var(--shadow-md);
+            transition: box-shadow 0.3s;
         }
 
         .card h2 {
@@ -284,6 +305,8 @@
             border-left: 4px solid;
             cursor: pointer;
             transition: all 0.3s;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .flow-step.early {
@@ -303,6 +326,10 @@
 
         .flow-step:hover {
             transform: translateX(5px);
+        }
+        
+        .flow-step:active {
+            transform: translateX(3px) scale(0.99);
         }
 
         .flow-step h4 {
@@ -422,6 +449,10 @@
 
         .biomarker-row:hover {
             background-color: rgba(var(--color-teal-500-rgb), 0.05);
+        }
+        
+        .biomarker-row:active {
+            background-color: rgba(var(--color-teal-500-rgb), 0.08);
         }
 
         .range-indicator {
@@ -616,9 +647,16 @@
         }
 
         .checkbox-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
+            margin: 0;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-item label {
+            cursor: pointer;
+            user-select: none;
         }
 
         .footer {
@@ -646,6 +684,14 @@
             height: auto;
             border-radius: var(--radius-base);
             box-shadow: var(--shadow-md);
+            display: block;
+            margin: 0 auto;
+        }
+        
+        /* Improve image loading performance */
+        img {
+            max-width: 100%;
+            height: auto;
         }
 
         .info-box {
