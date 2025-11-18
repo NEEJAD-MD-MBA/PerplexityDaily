@@ -1,0 +1,6 @@
+Recovery Outcome,Timeline,Percentage of Survivors (%),Physical Complications (%),Cognitive Dysfunction (%),Psychological Issues (%),Hospital Readmission Risk,QoL Impact
+Complete recovery,0-3 months,25,<10%,<5%,<10%,Low (<10%),Normal
+Partial recovery (near-complete),3-12 months,25,10-20%,10-15%,15-25%,Moderate (10-20%),Near-normal
+Persistent impairment,6-24 months,50,40-60%,30-50%,40-60%,High (30-50%),Significantly impaired
+Significant disability,Ongoing,15,60-80%,60%+,70%+,Very high (50%+),Severely impaired
+Death or DNR,Variable,Variable,-,-,-,-,-

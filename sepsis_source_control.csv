@@ -1,0 +1,8 @@
+Infection Type,Urgency Category,Ideal Timing,Mortality if Delayed,Procedure Type
+Necrotizing skin/soft tissue infection,Category 1: Immediate,<6 hours,Extreme (>50%),Surgical debridement
+Intra-abdominal infection,Category 1: Immediate,<6-12 hours,Severe (40-50%),Surgical drainage/washout
+Acute cholecystitis,Category 2: Urgent,<24 hours,Increased 20-30%,ERCP/surgical intervention
+Cholangitis/biliary obstruction,Category 2: Urgent,<24 hours,Increased 15-25%,ERCP/drainage
+Endocarditis,Category 2: Urgent,Within 24 hours,Moderate increase,Surgical or percutaneous
+Infected pancreatic necrosis,Category 3: Planned,After demarcation,Depends on stability,Percutaneous or surgical
+Joint/bone infection,Category 2: Urgent,Variable,Increased risk,Drainage/debridement

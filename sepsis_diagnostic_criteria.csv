@@ -1,0 +1,5 @@
+Scoring System,Temperature (°C),Heart Rate,Respiratory Rate,WBC,Mental Status,Sensitivity,Specificity,AUC-ROC
+SIRS Criteria,>38 or <36,>90,>20 or PaCO2<32,">12,000 or <4,000",Not included,88%,26%,-
+qSOFA,Not included,Not included,Not included,Not included,Altered mental status,61%,72%,-
+SOFA Score,Not included,Not included,Not included,Not included,Glasgow score,97%,High,Highest
+NEWS,Part of assessment,Part of assessment,Part of assessment,Not included,Included,High,Variable,0.708

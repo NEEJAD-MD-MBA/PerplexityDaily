@@ -1,0 +1,11 @@
+Risk Factor Category,Specific Risk Factor,Relative Risk,Mortality Increase,Prevalence in Sepsis (%)
+Age,≥65 years old,3-5x,Baseline increase,50-60
+Age,<2 years old,3-4x,Baseline increase,5-10
+Comorbidities,Diabetes mellitus,1.5-2x,20-30% increase,15-25
+Comorbidities,Chronic kidney disease,2-3x,30-50% increase,10-15
+Comorbidities,Cancer/hematologic malignancy,3-4x,40-60% increase,10-15
+Comorbidities,COPD,2-2.5x,15-25% increase,5-10
+Immune Status,HIV/AIDS,2-3x (with CD4<200: 10x),30-40% increase,3-5
+Immune Status,Immunosuppressive therapy,2-5x,Variable (10-50%),5-10
+Device-Related,Central venous catheter,1.5-3x,15-25% increase,15-20
+Prior Exposure,Recent hospitalization/antibiotics,2-4x,20-40% increase,20-30

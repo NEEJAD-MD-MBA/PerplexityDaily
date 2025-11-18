@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepsis Management &amp; Education Dashboard</title>
+    <style>
+        /* Design System Variables */
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            
+            /* Medical color scheme */
+            --med-normal: #2ecc71;
+            --med-caution: #f39c12;
+            --med-critical: #e74c3c;
+            --med-info: #3498db;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-teal-500) 0%, var(--color-teal-700) 100%);
+            color: white;
+            padding: var(--space-24) var(--space-32);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header h1 {
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--space-8);
+        }
+
+        .header p {
+            font-size: var(--font-size-lg);
+            opacity: 0.95;
+        }
+
+        .nav {
+            background-color: var(--color-surface);
+            border-bottom: 2px solid var(--color-border);
+            display: flex;
+            justify-content: center;
+            gap: var(--space-8);
+            padding: 0 var(--space-16);
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: var(--space-16) var(--space-24);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            color: var(--color-primary);
+            background-color: rgba(var(--color-teal-500-rgb), 0.05);
+        }
+
+        .nav-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-32);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-24);
+            margin-bottom: var(--space-32);
+        }
+
+        .stat-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-base);
+            color: var(--color-text-secondary);
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-bottom: var(--space-24);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card h2 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-16);
+            color: var(--color-text);
+        }
+
+        .card h3 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-12);
+            color: var(--color-text);
+        }
+
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-16);
+        }
+
+        .flow-step {
+            padding: var(--space-20);
+            border-radius: var(--radius-base);
+            border-left: 4px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .flow-step.early {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left-color: var(--med-normal);
+        }
+
+        .flow-step.warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            border-left-color: var(--med-caution);
+        }
+
+        .flow-step.critical {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left-color: var(--med-critical);
+        }
+
+        .flow-step:hover {
+            transform: translateX(5px);
+        }
+
+        .flow-step h4 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-8);
+        }
+
+        .flow-details {
+            display: none;
+            margin-top: var(--space-12);
+            padding-top: var(--space-12);
+            border-top: 1px solid var(--color-border);
+            font-size: var(--font-size-sm);
+        }
+
+        .flow-details.show {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-16);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: var(--space-12) var(--space-20);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background-color: rgba(var(--color-teal-500-rgb), 0.1);
+        }
+
+        .tab-btn.active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--space-16);
+        }
+
+        th, td {
+            padding: var(--space-12);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            background-color: rgba(var(--color-teal-500-rgb), 0.1);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .biomarker-row {
+            transition: background-color 0.2s;
+        }
+
+        .biomarker-row:hover {
+            background-color: rgba(var(--color-teal-500-rgb), 0.05);
+        }
+
+        .range-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+        }
+
+        .range-normal {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+
+        .range-elevated {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: #d68910;
+        }
+
+        .range-critical {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+
+        .calculator {
+            background-color: rgba(var(--color-teal-500-rgb), 0.05);
+            padding: var(--space-24);
+            border-radius: var(--radius-base);
+            margin-top: var(--space-24);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-16);
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+            font-size: var(--font-size-base);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: var(--space-12);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+        }
+
+        .btn {
+            padding: var(--space-12) var(--space-24);
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(var(--color-teal-500-rgb), 0.1);
+        }
+
+        .result-box {
+            margin-top: var(--space-16);
+            padding: var(--space-20);
+            border-radius: var(--radius-base);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .result-low {
+            background-color: rgba(46, 204, 113, 0.2);
+            border: 2px solid var(--med-normal);
+            color: #27ae60;
+        }
+
+        .result-moderate {
+            background-color: rgba(243, 156, 18, 0.2);
+            border: 2px solid var(--med-caution);
+            color: #d68910;
+        }
+
+        .result-high {
+            background-color: rgba(231, 76, 60, 0.2);
+            border: 2px solid var(--med-critical);
+            color: #c0392b;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: var(--space-32);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--med-normal), var(--med-caution), var(--med-critical));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--space-24);
+            padding-left: var(--space-24);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            border: 3px solid var(--color-surface);
+        }
+
+        .timeline-time {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-8);
+        }
+
+        .timeline-tasks {
+            list-style: none;
+            padding-left: var(--space-16);
+        }
+
+        .timeline-tasks li {
+            padding: var(--space-8) 0;
+            position: relative;
+            padding-left: var(--space-20);
+        }
+
+        .timeline-tasks li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--med-normal);
+            font-weight: bold;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--space-12);
+            margin: var(--space-16) 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .footer {
+            background-color: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: var(--space-24);
+            margin-top: var(--space-32);
+            text-align: center;
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+
+        .disclaimer {
+            margin-bottom: var(--space-12);
+            font-style: italic;
+        }
+
+        .chart-container {
+            margin: var(--space-24) 0;
+            text-align: center;
+        }
+
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-base);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-box {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--med-info);
+            padding: var(--space-16);
+            margin: var(--space-16) 0;
+            border-radius: var(--radius-base);
+        }
+
+        .warning-box {
+            background-color: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--med-caution);
+            padding: var(--space-16);
+            margin: var(--space-16) 0;
+            border-radius: var(--radius-base);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-24);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: var(--font-size-3xl);
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: var(--space-16);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sepsis Management &amp; Education Dashboard</h1>
+        <p>Evidence-Based Clinical Decision Support | Surviving Sepsis Campaign 2021 Guidelines</p>
+    </div>
+
+    <nav class="nav">
+        <button class="nav-btn active" onclick="showSection('home')">HOME</button>
+        <button class="nav-btn" onclick="showSection('pathophysiology')">PATHOPHYSIOLOGY</button>
+        <button class="nav-btn" onclick="showSection('diagnostics')">DIAGNOSTICS</button>
+        <button class="nav-btn" onclick="showSection('management')">MANAGEMENT</button>
+        <button class="nav-btn" onclick="showSection('outcomes')">OUTCOMES</button>
+    </nav>
+
+    <div class="container">
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card" style="border-top: 4px solid var(--med-critical);">
+                    <div class="stat-value" style="color: var(--med-critical);">48.9M</div>
+                    <div class="stat-label">Global Annual Sepsis Cases</div>
+                </div>
+                <div class="stat-card" style="border-top: 4px solid var(--med-caution);">
+                    <div class="stat-value" style="color: var(--med-caution);">26.7%</div>
+                    <div class="stat-label">Average Mortality Rate (up to 50%+ in shock)</div>
+                </div>
+                <div class="stat-card" style="border-top: 4px solid var(--med-info);">
+                    <div class="stat-value" style="color: var(--med-info);">75%</div>
+                    <div class="stat-label">Survivors with Long-term Effects</div>
+                </div>
+                <div class="stat-card" style="border-top: 4px solid var(--color-primary);">
+                    <div class="stat-value" style="color: var(--color-primary);">11M</div>
+                    <div class="stat-label">Annual Deaths Worldwide</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Quick Facts: Sepsis Epidemiology</h2>
+                <div class="grid-2">
+                    <div>
+                        <h3>High-Income Countries</h3>
+                        <ul style="line-height: 2;">
+                            <li><strong>Incidence:</strong> 270-440 per 100,000 population</li>
+                            <li><strong>Sepsis Mortality:</strong> 15-17%</li>
+                            <li><strong>Septic Shock Mortality:</strong> 35-42%</li>
+                            <li><strong>ICU Admission Rate:</strong> 40-50%</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Low- and Middle-Income Countries</h3>
+                        <ul style="line-height: 2;">
+                            <li><strong>Incidence:</strong> 620-890 per 100,000 population</li>
+                            <li><strong>Sepsis Mortality:</strong> 30-40%</li>
+                            <li><strong>Septic Shock Mortality:</strong> 55-70%</li>
+                            <li><strong>Healthcare Access:</strong> Limited early intervention</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>High-Risk Populations</h2>
+                <div class="stats-grid">
+                    <div class="info-box">
+                        <strong>Age ≥65 years:</strong> 3-5× increased risk
+                    </div>
+                    <div class="info-box">
+                        <strong>Diabetes Mellitus:</strong> 1.5-2× increased risk
+                    </div>
+                    <div class="info-box">
+                        <strong>Chronic Kidney Disease:</strong> 2-3× increased risk
+                    </div>
+                    <div class="info-box">
+                        <strong>Cancer (Active):</strong> 3-4× increased risk
+                    </div>
+                    <div class="info-box">
+                        <strong>COPD:</strong> 2-2.5× increased risk
+                    </div>
+                    <div class="info-box">
+                        <strong>HIV (CD4 &lt;200):</strong> 10× increased risk
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Global Sepsis Mortality by Region</h3>
+                <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/523fe4f0daf9e4ce030713805d5fd1e3/40fbef94-b3f7-41e1-b14b-2d368c40e622/c3ef56c0.png" alt="Sepsis Mortality Chart">
+            </div>
+
+            <div style="text-align: center; margin-top: var(--space-32);">
+                <button class="btn" onclick="showSection('management')" style="font-size: var(--font-size-lg); padding: var(--space-16) var(--space-32);">Get Started: SEP-1 Bundle Protocol →</button>
+            </div>
+        </section>
+
+        <!-- PATHOPHYSIOLOGY SECTION -->
+        <section id="pathophysiology" class="section">
+            <div class="card">
+                <h2>Sepsis Pathophysiological Cascade</h2>
+                <p style="margin-bottom: var(--space-24);">Click on each step to view detailed mechanisms, mediators, and intervention points.</p>
+                
+                <div class="flow-diagram">
+                    <div class="flow-step early" onclick="toggleDetails(this)">
+                        <h4>1. Infection Onset &amp; Pathogen Recognition</h4>
+                        <p>Initial invasion by bacteria, viruses, fungi, or parasites</p>
+                        <div class="flow-details">
+                            <strong>Mechanism:</strong> Pathogen-associated molecular patterns (PAMPs) recognized by pattern recognition receptors (PRRs)<br>
+                            <strong>Key Receptors:</strong> Toll-like receptors (TLR2, TLR4, TLR9), NOD-like receptors<br>
+                            <strong>Markers:</strong> Early elevation of procalcitonin<br>
+                            <strong>Intervention:</strong> Early source identification, blood cultures before antibiotics
+                        </div>
+                    </div>
+
+                    <div class="flow-step early" onclick="toggleDetails(this)">
+                        <h4>2. Innate Immune Activation</h4>
+                        <p>Rapid mobilization of neutrophils, macrophages, and complement</p>
+                        <div class="flow-details">
+                            <strong>Mechanism:</strong> TLR activation triggers NF-κB signaling pathway<br>
+                            <strong>Key Mediators:</strong> TNF-α, IL-1β, IL-6, IL-8, complement C3a/C5a<br>
+                            <strong>Markers:</strong> WBC elevation/depression, left shift, toxic granulation<br>
+                            <strong>Clinical Signs:</strong> Fever/hypothermia, tachycardia, tachypnea
+                        </div>
+                    </div>
+
+                    <div class="flow-step warning" onclick="toggleDetails(this)">
+                        <h4>3. Cytokine Storm &amp; Systemic Inflammation</h4>
+                        <p>Excessive pro-inflammatory cytokine release (SIRS)</p>
+                        <div class="flow-details">
+                            <strong>Mechanism:</strong> Dysregulated "cytokine storm" with loss of homeostatic control<br>
+                            <strong>Key Mediators:</strong> TNF-α, IL-1, IL-6, IL-8, IFN-γ, HMGB1<br>
+                            <strong>Markers:</strong> Elevated CRP, procalcitonin &gt;2 ng/mL, ferritin<br>
+                            <strong>Intervention:</strong> Early antibiotics (within 1 hour), source control<br>
+                            <strong>Phase:</strong> Potentially reversible with aggressive treatment
+                        </div>
+                    </div>
+
+                    <div class="flow-step warning" onclick="toggleDetails(this)">
+                        <h4>4. Endothelial Dysfunction &amp; Capillary Leak</h4>
+                        <p>Vascular barrier breakdown and third-spacing of fluids</p>
+                        <div class="flow-details">
+                            <strong>Mechanism:</strong> Cytokine-induced endothelial activation, increased permeability, loss of glycocalyx<br>
+                            <strong>Key Mediators:</strong> VEGF, angiopoietin-2, sphingosine-1-phosphate<br>
+                            <strong>Markers:</strong> Lactate elevation, decreased albumin, edema<br>
+                            <strong>Clinical Signs:</strong> Hypotension, tissue edema, decreased urine output<br>
+                            <strong>Intervention:</strong> IV crystalloid resuscitation (30 mL/kg), albumin in select cases
+                        </div>
+                    </div>
+
+                    <div class="flow-step critical" onclick="toggleDetails(this)">
+                        <h4>5. Coagulation Cascade Activation</h4>
+                        <p>Disseminated intravascular coagulation (DIC) and microthrombi formation</p>
+                        <div class="flow-details">
+                            <strong>Mechanism:</strong> Tissue factor expression, thrombin generation, impaired fibrinolysis, consumption of clotting factors<br>
+                            <strong>Key Mediators:</strong> Tissue factor, thrombin, PAI-1, protein C depletion<br>
+                            <strong>Markers:</strong> Thrombocytopenia, prolonged PT/PTT, elevated D-dimer, low fibrinogen<br>
+                            <strong>Clinical Signs:</strong> Bleeding, purpura, acral cyanosis<br>
+                            <strong>Intervention:</strong> Treat underlying sepsis, supportive care (transfusion as needed)
+                        </div>
+                    </div>
+
+                    <div class="flow-step critical" onclick="toggleDetails(this)">
+                        <h4>6. Organ Dysfunction (Sepsis Definition)</h4>
+                        <p>Microvascular failure leading to cellular hypoxia and organ injury</p>
+                        <div class="flow-details">
+                            <strong>Mechanism:</strong> Impaired oxygen delivery/utilization, mitochondrial dysfunction, cellular apoptosis<br>
+                            <strong>Diagnostic Criteria:</strong> SOFA score increase ≥2 points<br>
+                            <strong>Organ Systems:</strong> Respiratory (ARDS), Cardiovascular (shock), Renal (AKI), Hepatic (cholestasis), Neurological (encephalopathy), Hematologic (DIC)<br>
+                            <strong>Markers:</strong> Lactate &gt;2 mmol/L, creatinine elevation, bilirubin elevation, platelet drop<br>
+                            <strong>Intervention:</strong> Organ support (mechanical ventilation, vasopressors, RRT)
+                        </div>
+                    </div>
+
+                    <div class="flow-step critical" onclick="toggleDetails(this)">
+                        <h4>7. Septic Shock</h4>
+                        <p>Persistent hypotension requiring vasopressors, lactate &gt;2 despite fluids</p>
+                        <div class="flow-details">
+                            <strong>Definition:</strong> Sepsis + vasopressor requirement (MAP ≥65) + lactate &gt;2 mmol/L after adequate fluid resuscitation<br>
+                            <strong>Mechanism:</strong> Profound vasodilation, myocardial depression, distributive shock<br>
+                            <strong>Markers:</strong> Lactate &gt;2-4 mmol/L, ScvO2 abnormalities<br>
+                            <strong>Mortality:</strong> 40-60% (22.5% if SEP-1 bundle met)<br>
+                            <strong>Intervention:</strong> Norepinephrine (first-line vasopressor), consider vasopressin/epinephrine, stress-dose steroids if refractory
+                        </div>
+                    </div>
+
+                    <div class="flow-step critical" onclick="toggleDetails(this)">
+                        <h4>8. Multiple Organ Failure (MOF)</h4>
+                        <p>Irreversible organ damage in 3+ organ systems</p>
+                        <div class="flow-details">
+                            <strong>Mechanism:</strong> Prolonged cellular hypoxia, mitochondrial damage, cellular death<br>
+                            <strong>Prognosis:</strong> Mortality increases with each additional organ system failure<br>
+                            <strong>SOFA Score:</strong> Typically &gt;12-15<br>
+                            <strong>Phase:</strong> Often irreversible despite maximal support<br>
+                            <strong>Management:</strong> Maximal organ support, palliative care discussions
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>SEP-1 Bundle Timeline &amp; Decision Flow</h3>
+                <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/523fe4f0daf9e4ce030713805d5fd1e3/56833ee9-2c93-423d-a30c-ddc3ced4ec53/77f2ff63.png" alt="Sepsis Management Flowchart">
+            </div>
+
+            <div class="warning-box">
+                <strong>Critical Concept:</strong> The transition from reversible inflammation to irreversible organ failure is time-dependent. Each hour of delay in appropriate antibiotic administration increases mortality by 7.6% in septic shock.
+            </div>
+        </section>
+
+        <!-- DIAGNOSTICS SECTION -->
+        <section id="diagnostics" class="section">
+            <div class="card">
+                <h2>Diagnostic Criteria Comparison</h2>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('sirs')">SIRS Criteria</button>
+                    <button class="tab-btn" onclick="showTab('qsofa')">qSOFA</button>
+                    <button class="tab-btn" onclick="showTab('sofa')">SOFA Score</button>
+                    <button class="tab-btn" onclick="showTab('news')">NEWS</button>
+                </div>
+
+                <div id="sirs" class="tab-content active">
+                    <h3>Systemic Inflammatory Response Syndrome (SIRS)</h3>
+                    <p><strong>Use:</strong> Screening tool with high sensitivity (88%) but poor specificity (26%)</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Criterion</th>
+                                <th>Abnormal Value</th>
+                                <th>Normal Range</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temperature</td>
+                                <td><span class="range-critical">&gt;38°C or &lt;36°C</span></td>
+                                <td>36-38°C</td>
+                            </tr>
+                            <tr>
+                                <td>Heart Rate</td>
+                                <td><span class="range-critical">&gt;90 bpm</span></td>
+                                <td>60-90 bpm</td>
+                            </tr>
+                            <tr>
+                                <td>Respiratory Rate</td>
+                                <td><span class="range-critical">&gt;20/min or PaCO2 &lt;32 mmHg</span></td>
+                                <td>12-20/min</td>
+                            </tr>
+                            <tr>
+                                <td>White Blood Cell Count</td>
+                                <td><span class="range-critical">&gt;12,000 or &lt;4,000 cells/µL</span></td>
+                                <td>4,000-12,000 cells/µL</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="info-box">
+                        <strong>Interpretation:</strong> ≥2 SIRS criteria + suspected infection = consider sepsis workup. SIRS is non-specific but useful for early screening.
+                    </div>
+                </div>
+
+                <div id="qsofa" class="tab-content">
+                    <h3>Quick SOFA (qSOFA)</h3>
+                    <p><strong>Use:</strong> Bedside assessment for patients outside ICU. Sensitivity 61%, Specificity 72%</p>
+                    <p><strong>Note:</strong> No longer recommended as standalone diagnostic tool per Sepsis-3 guidelines</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Criterion</th>
+                                <th>Positive Finding</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mental Status</td>
+                                <td><span class="range-critical">Altered (GCS &lt;15)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Systolic Blood Pressure</td>
+                                <td><span class="range-critical">≤100 mmHg</span></td>
+                            </tr>
+                            <tr>
+                                <td>Respiratory Rate</td>
+                                <td><span class="range-critical">≥22/min</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="warning-box">
+                        <strong>Interpretation:</strong> qSOFA ≥2 suggests higher risk of poor outcome. Should prompt full SOFA assessment and consideration of ICU care.
+                    </div>
+                </div>
+
+                <div id="sofa" class="tab-content">
+                    <h3>Sequential Organ Failure Assessment (SOFA)</h3>
+                    <p><strong>Use:</strong> Gold standard for sepsis diagnosis. Sensitivity 97%, high specificity</p>
+                    <p><strong>Sepsis Definition:</strong> Suspected infection + SOFA score increase ≥2 points</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Organ System</th>
+                                <th>Score 0</th>
+                                <th>Score 1</th>
+                                <th>Score 2</th>
+                                <th>Score 3</th>
+                                <th>Score 4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Respiratory</strong><br>(PaO2/FiO2)</td>
+                                <td>≥400</td>
+                                <td>&lt;400</td>
+                                <td>&lt;300</td>
+                                <td>&lt;200 + vent</td>
+                                <td>&lt;100 + vent</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Coagulation</strong><br>(Platelets ×10³/µL)</td>
+                                <td>≥150</td>
+                                <td>&lt;150</td>
+                                <td>&lt;100</td>
+                                <td>&lt;50</td>
+                                <td>&lt;20</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Liver</strong><br>(Bilirubin mg/dL)</td>
+                                <td>&lt;1.2</td>
+                                <td>1.2-1.9</td>
+                                <td>2.0-5.9</td>
+                                <td>6.0-11.9</td>
+                                <td>≥12.0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cardiovascular</strong></td>
+                                <td>MAP ≥70</td>
+                                <td>MAP &lt;70</td>
+                                <td>Dopa ≤5 or dobut</td>
+                                <td>Dopa &gt;5 or epi/norepi ≤0.1</td>
+                                <td>Dopa &gt;15 or epi/norepi &gt;0.1</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Neurological</strong><br>(Glasgow Coma Scale)</td>
+                                <td>15</td>
+                                <td>13-14</td>
+                                <td>10-12</td>
+                                <td>6-9</td>
+                                <td>&lt;6</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Renal</strong><br>(Creatinine mg/dL)</td>
+                                <td>&lt;1.2</td>
+                                <td>1.2-1.9</td>
+                                <td>2.0-3.4</td>
+                                <td>3.5-4.9</td>
+                                <td>≥5.0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="news" class="tab-content">
+                    <h3>National Early Warning Score (NEWS)</h3>
+                    <p><strong>Use:</strong> Early warning system for clinical deterioration. Scale 0-20</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Score 3</th>
+                                <th>Score 2</th>
+                                <th>Score 1</th>
+                                <th>Score 0</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Respiratory Rate</td>
+                                <td>≤8 or ≥25</td>
+                                <td>21-24</td>
+                                <td>9-11</td>
+                                <td>12-20</td>
+                            </tr>
+                            <tr>
+                                <td>O2 Saturation</td>
+                                <td>≤91%</td>
+                                <td>92-93%</td>
+                                <td>94-95%</td>
+                                <td>≥96%</td>
+                            </tr>
+                            <tr>
+                                <td>Temperature (°C)</td>
+                                <td>≤35.0</td>
+                                <td>-</td>
+                                <td>35.1-36.0 or 38.1-39.0</td>
+                                <td>36.1-38.0</td>
+                            </tr>
+                            <tr>
+                                <td>Systolic BP</td>
+                                <td>≤90 or ≥220</td>
+                                <td>91-100</td>
+                                <td>101-110</td>
+                                <td>111-219</td>
+                            </tr>
+                            <tr>
+                                <td>Heart Rate</td>
+                                <td>≤40 or ≥131</td>
+                                <td>41-50 or 111-130</td>
+                                <td>51-90 or 91-110</td>
+                                <td>51-90</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="info-box">
+                        <strong>Interpretation:</strong> NEWS 5-6 = Increased frequency monitoring; NEWS ≥7 = Emergency assessment, consider ICU
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>SOFA Score Calculator</h2>
+                <div class="calculator">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Respiratory (PaO2/FiO2):</label>
+                            <select id="sofa-resp">
+                                <option value="0">≥400 (Score 0)</option>
+                                <option value="1">&lt;400 (Score 1)</option>
+                                <option value="2">&lt;300 (Score 2)</option>
+                                <option value="3">&lt;200 with ventilation (Score 3)</option>
+                                <option value="4">&lt;100 with ventilation (Score 4)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Coagulation (Platelets ×10³/µL):</label>
+                            <select id="sofa-coag">
+                                <option value="0">≥150 (Score 0)</option>
+                                <option value="1">&lt;150 (Score 1)</option>
+                                <option value="2">&lt;100 (Score 2)</option>
+                                <option value="3">&lt;50 (Score 3)</option>
+                                <option value="4">&lt;20 (Score 4)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Liver (Bilirubin mg/dL):</label>
+                            <select id="sofa-liver">
+                                <option value="0">&lt;1.2 (Score 0)</option>
+                                <option value="1">1.2-1.9 (Score 1)</option>
+                                <option value="2">2.0-5.9 (Score 2)</option>
+                                <option value="3">6.0-11.9 (Score 3)</option>
+                                <option value="4">≥12.0 (Score 4)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cardiovascular:</label>
+                            <select id="sofa-cardio">
+                                <option value="0">MAP ≥70 (Score 0)</option>
+                                <option value="1">MAP &lt;70 (Score 1)</option>
+                                <option value="2">Dopamine ≤5 or dobutamine (Score 2)</option>
+                                <option value="3">Dopamine &gt;5 or epi/norepi ≤0.1 (Score 3)</option>
+                                <option value="4">Dopamine &gt;15 or epi/norepi &gt;0.1 (Score 4)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Neurological (GCS):</label>
+                            <select id="sofa-neuro">
+                                <option value="0">15 (Score 0)</option>
+                                <option value="1">13-14 (Score 1)</option>
+                                <option value="2">10-12 (Score 2)</option>
+                                <option value="3">6-9 (Score 3)</option>
+                                <option value="4">&lt;6 (Score 4)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Renal (Creatinine mg/dL or UOP):</label>
+                            <select id="sofa-renal">
+                                <option value="0">&lt;1.2 (Score 0)</option>
+                                <option value="1">1.2-1.9 (Score 1)</option>
+                                <option value="2">2.0-3.4 (Score 2)</option>
+                                <option value="3">3.5-4.9 or UOP &lt;500 mL/day (Score 3)</option>
+                                <option value="4">≥5.0 or UOP &lt;200 mL/day (Score 4)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="calculateSOFA()" style="margin-top: var(--space-16);">Calculate SOFA Score</button>
+                    <div id="sofa-result"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Biomarker Reference Ranges</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Biomarker</th>
+                            <th>Normal Range</th>
+                            <th>Sepsis Level</th>
+                            <th>Sensitivity</th>
+                            <th>Specificity</th>
+                            <th>AUC-ROC</th>
+                        </tr>
+                    </thead>
+                    <tbody class="biomarker-row">
+                        <tr>
+                            <td><strong>Procalcitonin (PCT)</strong></td>
+                            <td><span class="range-normal">&lt;0.1 ng/mL</span></td>
+                            <td><span class="range-critical">&gt;10 ng/mL</span></td>
+                            <td>88%</td>
+                            <td>70%</td>
+                            <td>0.82</td>
+                        </tr>
+                        <tr class="biomarker-row">
+                            <td><strong>C-Reactive Protein (CRP)</strong></td>
+                            <td><span class="range-normal">&lt;10 mg/L</span></td>
+                            <td><span class="range-critical">&gt;20 mg/L</span></td>
+                            <td>85%</td>
+                            <td>68%</td>
+                            <td>0.78</td>
+                        </tr>
+                        <tr class="biomarker-row">
+                            <td><strong>Lactate</strong></td>
+                            <td><span class="range-normal">&lt;2 mmol/L</span></td>
+                            <td><span class="range-critical">&gt;4 mmol/L</span></td>
+                            <td>88%</td>
+                            <td>97%</td>
+                            <td>0.81</td>
+                        </tr>
+                        <tr class="biomarker-row">
+                            <td><strong>White Blood Cell (WBC)</strong></td>
+                            <td><span class="range-normal">4-12 ×10³/µL</span></td>
+                            <td><span class="range-critical">&gt;12 or &lt;4 ×10³/µL</span></td>
+                            <td>70%</td>
+                            <td>50%</td>
+                            <td>0.65</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="chart-container">
+                    <h3>Biomarker Diagnostic Performance</h3>
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/523fe4f0daf9e4ce030713805d5fd1e3/d9698edf-f4a0-4f10-af0c-d56ae0150393/87198d87.png" alt="Biomarker Performance Chart">
+                </div>
+
+                <div class="info-box">
+                    <strong>Clinical Interpretation:</strong>
+                    <ul style="margin-top: var(--space-8); line-height: 1.8;">
+                        <li><strong>Procalcitonin:</strong> Most specific for bacterial sepsis; guides antibiotic initiation and de-escalation</li>
+                        <li><strong>Lactate:</strong> Best marker for tissue hypoperfusion; serial measurements guide resuscitation</li>
+                        <li><strong>CRP:</strong> Non-specific inflammatory marker; slower to rise and fall than PCT</li>
+                        <li><strong>Combine markers</strong> for improved diagnostic accuracy rather than relying on single biomarker</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- MANAGEMENT SECTION -->
+        <section id="management" class="section">
+            <div class="card">
+                <h2>SEP-1 Bundle: Time-Critical Interventions</h2>
+                <p style="margin-bottom: var(--space-24);"><strong>Evidence:</strong> Compliance with 3-hour and 6-hour bundles reduces septic shock mortality from 42.2% to 22.5%</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">T = 0 (Recognition)</div>
+                        <p><strong>Sepsis Identified:</strong> Suspected infection + SOFA ≥2 or qSOFA ≥2</p>
+                        <p style="margin-top: var(--space-8);">Start clock for bundle compliance</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-time">T = 0-3 Hours: 3-Hour Bundle</div>
+                        <ul class="timeline-tasks">
+                            <li><strong>Measure lactate level</strong> (initial baseline for resuscitation)</li>
+                            <li><strong>Obtain blood cultures</strong> BEFORE antibiotics (2 sets from different sites)</li>
+                            <li><strong>Administer broad-spectrum antibiotics</strong> (within 1 hour ideal, 3 hours maximum)</li>
+                            <li><strong>Begin IV fluid resuscitation</strong> with 30 mL/kg crystalloids if hypotensive or lactate ≥4 mmol/L</li>
+                        </ul>
+                        <div class="warning-box" style="margin-top: var(--space-12);">
+                            <strong>Critical:</strong> Each hour delay in antibiotic administration increases mortality by 7.6% in septic shock
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-time">T = 3-6 Hours: 6-Hour Bundle</div>
+                        <ul class="timeline-tasks">
+                            <li><strong>Re-measure lactate</strong> if initially elevated (target &gt;20% reduction or normalization)</li>
+                            <li><strong>Reassess volume status</strong> and tissue perfusion (capillary refill, skin mottling, mental status)</li>
+                            <li><strong>Document reassessment</strong> with exam or two of: CVP, ScvO2, bedside echo, passive leg raise</li>
+                            <li><strong>Initiate vasopressors</strong> if MAP &lt;65 mmHg despite adequate fluid resuscitation</li>
+                        </ul>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-time">Ongoing Management</div>
+                        <ul class="timeline-tasks">
+                            <li>Source control evaluation (imaging, surgical consultation if indicated)</li>
+                            <li>De-escalate antibiotics based on cultures and clinical improvement</li>
+                            <li>Reassess fluid status frequently to avoid overload</li>
+                            <li>Monitor for complications (ARDS, AKI, DIC)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Empiric Antibiotic Selection by Infection Source</h2>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('abx-respiratory')">Respiratory</button>
+                    <button class="tab-btn" onclick="showTab('abx-gi')">Gastrointestinal</button>
+                    <button class="tab-btn" onclick="showTab('abx-urinary')">Urinary</button>
+                    <button class="tab-btn" onclick="showTab('abx-skin')">Skin/Soft Tissue</button>
+                </div>
+
+                <div id="abx-respiratory" class="tab-content active">
+                    <h3>Respiratory Source (Pneumonia)</h3>
+                    <div class="grid-2">
+                        <div>
+                            <h4 style="color: var(--med-normal); margin-bottom: var(--space-12);">Low Risk (Community-Acquired)</h4>
+                            <ul style="line-height: 2;">
+                                <li><strong>Ceftriaxone 2g IV q24h</strong> + <strong>Azithromycin 500mg IV daily</strong></li>
+                                <li>Alternative: <strong>Levofloxacin 750mg IV daily</strong> (monotherapy)</li>
+                                <li>Covers: <em>S. pneumoniae, H. influenzae, atypicals</em></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--med-critical); margin-bottom: var(--space-12);">High Risk (HAP/VAP, Pseudomonas risk)</h4>
+                            <ul style="line-height: 2;">
+                                <li><strong>Vancomycin 15-20mg/kg IV q8-12h</strong> (MRSA coverage)</li>
+                                <li>PLUS <strong>Ceftazidime 2g IV q8h</strong> or <strong>Cefepime 2g IV q8h</strong></li>
+                                <li>Add <strong>Levofloxacin 750mg IV daily</strong> for atypical coverage</li>
+                                <li>Covers: <em>MRSA, Pseudomonas, resistant GNRs, atypicals</em></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abx-gi" class="tab-content">
+                    <h3>Gastrointestinal/Intra-Abdominal Source</h3>
+                    <div class="grid-2">
+                        <div>
+                            <h4 style="color: var(--med-normal); margin-bottom: var(--space-12);">Low Risk (Mild Severity)</h4>
+                            <ul style="line-height: 2;">
+                                <li><strong>Ceftriaxone 2g IV q24h</strong> + <strong>Metronidazole 500mg IV q8h</strong></li>
+                                <li>Alternative: <strong>Ertapenem 1g IV daily</strong></li>
+                                <li>Covers: <em>E. coli, Klebsiella, anaerobes</em></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--med-critical); margin-bottom: var(--space-12);">High Risk (Severe, Healthcare-Associated)</h4>
+                            <ul style="line-height: 2;">
+                                <li><strong>Piperacillin/Tazobactam 4.5g IV q6h</strong> (extended infusion)</li>
+                                <li>OR <strong>Cefepime 2g IV q8h</strong> + <strong>Metronidazole 500mg IV q8h</strong></li>
+                                <li>Consider adding <strong>Vancomycin</strong> if critically ill</li>
+                                <li>Covers: <em>ESBL, Pseudomonas, anaerobes, resistant GNRs</em></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abx-urinary" class="tab-content">
+                    <h3>Urinary Tract Source (Pyelonephritis/Urosepsis)</h3>
+                    <div class="grid-2">
+                        <div>
+                            <h4 style="color: var(--med-normal); margin-bottom: var(--space-12);">Low Risk (Community-Acquired)</h4>
+                            <ul style="line-height: 2;">
+                                <li><strong>Ceftriaxone 2g IV q24h</strong></li>
+                                <li>Alternative: <strong>Levofloxacin 750mg IV daily</strong></li>
+                                <li>Covers: <em>E. coli, Proteus, Klebsiella</em></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--med-critical); margin-bottom: var(--space-12);">High Risk (Recent hospitalization, instrumentation)</h4>
+                            <ul style="line-height: 2;">
+                                <li><strong>Cefepime 2g IV q8h</strong> or <strong>Ceftazidime 2g IV q8h</strong></li>
+                                <li>For severe: <strong>Imipenem 500mg IV q6h</strong> or <strong>Meropenem 1g IV q8h</strong></li>
+                                <li>Covers: <em>ESBL E. coli, Pseudomonas, Enterococcus</em></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="abx-skin" class="tab-content">
+                    <h3>Skin &amp; Soft Tissue Source (Cellulitis/Necrotizing Infection)</h3>
+                    <div class="grid-2">
+                        <div>
+                            <h4 style="color: var(--med-normal); margin-bottom: var(--space-12);">Non-Purulent Cellulitis</h4>
+                            <ul style="line-height: 2;">
+                                <li><strong>Ceftriaxone 2g IV q24h</strong></li>
+                                <li>OR <strong>Cefazolin 2g IV q8h</strong></li>
+                                <li>Covers: <em>Streptococcus, MSSA</em></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--med-critical); margin-bottom: var(--space-12);">Purulent/Necrotizing or MRSA Risk</h4>
+                            <ul style="line-height: 2;">
+                                <li><strong>Vancomycin 15-20mg/kg IV q8-12h</strong> (MRSA)</li>
+                                <li>PLUS <strong>Piperacillin/Tazobactam 4.5g IV q6h</strong> (polymicrobial)</li>
+                                <li>Add <strong>Clindamycin 900mg IV q8h</strong> (toxin suppression for necrotizing infections)</li>
+                                <li><strong>URGENT SURGICAL CONSULTATION</strong> for necrotizing fasciitis</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box" style="margin-top: var(--space-24);">
+                    <strong>Important Notes:</strong>
+                    <ul style="margin-top: var(--space-8); line-height: 1.8;">
+                        <li>Adjust dosing for renal/hepatic impairment</li>
+                        <li>De-escalate based on culture results and clinical improvement (typically 48-72 hours)</li>
+                        <li>Consider local antibiogram and resistance patterns</li>
+                        <li>Procalcitonin-guided therapy can help determine duration</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Fluid Resuscitation Calculator</h2>
+                <div class="calculator">
+                    <p style="margin-bottom: var(--space-16);"><strong>SEP-1 Requirement:</strong> 30 mL/kg IV crystalloids for hypotension or lactate ≥4 mmol/L</p>
+                    <div class="form-group">
+                        <label>Patient Weight (kg):</label>
+                        <input type="number" id="fluid-weight" placeholder="Enter weight in kg" min="1" max="300">
+                    </div>
+                    <button class="btn" onclick="calculateFluid()">Calculate Fluid Requirement</button>
+                    <div id="fluid-result"></div>
+                </div>
+
+                <div class="info-box" style="margin-top: var(--space-24);">
+                    <strong>Fluid Selection:</strong>
+                    <ul style="margin-top: var(--space-8); line-height: 1.8;">
+                        <li><strong>First-line:</strong> Balanced crystalloids (Lactated Ringer's or Plasma-Lyte) preferred over normal saline</li>
+                        <li><strong>Alternative:</strong> 0.9% Normal Saline (may cause hyperchloremic acidosis with large volumes)</li>
+                        <li><strong>Albumin:</strong> Consider 5% albumin in addition to crystalloids for patients requiring substantial resuscitation</li>
+                        <li><strong>Avoid:</strong> Starches (associated with increased AKI and mortality)</li>
+                        <li><strong>Reassess frequently:</strong> Stop fluids when adequate perfusion achieved to avoid fluid overload</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Vasopressor Management</h2>
+                <div class="grid-2">
+                    <div class="card" style="background-color: rgba(46, 204, 113, 0.1);">
+                        <h3>First-Line: Norepinephrine</h3>
+                        <p><strong>Dose:</strong> 0.05-2 mcg/kg/min IV (typical starting 5-10 mcg/min)</p>
+                        <p><strong>Target:</strong> Mean Arterial Pressure (MAP) ≥65 mmHg</p>
+                        <p><strong>Mechanism:</strong> α1 &gt; β1 agonist (vasoconstriction + inotropy)</p>
+                        <p><strong>Monitoring:</strong> Arterial line for continuous BP, lactate clearance, urine output</p>
+                    </div>
+                    <div class="card" style="background-color: rgba(243, 156, 18, 0.1);">
+                        <h3>Second-Line Options</h3>
+                        <p><strong>Vasopressin:</strong> 0.03-0.04 units/min (fixed dose, add to norepinephrine)</p>
+                        <p><strong>Epinephrine:</strong> 0.05-2 mcg/kg/min (if refractory, may increase lactate)</p>
+                        <p><strong>Phenylephrine:</strong> Pure α-agonist, use if tachyarrhythmia limits other agents</p>
+                    </div>
+                </div>
+
+                <div class="warning-box" style="margin-top: var(--space-16);">
+                    <strong>Adjunctive Therapy - Hydrocortisone:</strong> Consider stress-dose steroids (hydrocortisone 50mg IV q6h or 200mg/day continuous infusion) if shock is refractory to fluids and vasopressors. Controversial benefit per ADRENAL and APROCCHSS trials.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Source Control Urgency Assessment</h2>
+                <p style="margin-bottom: var(--space-16);">Timing of source control intervention impacts mortality. Categorize urgency:</p>
+                
+                <div class="flow-step critical" style="margin-bottom: var(--space-16);">
+                    <h4>Category 1: IMMEDIATE (&lt;6 hours)</h4>
+                    <p><strong>High mortality without emergent intervention</strong></p>
+                    <ul style="margin-top: var(--space-8); line-height: 1.8;">
+                        <li>Necrotizing soft tissue infection (fasciitis, myonecrosis)</li>
+                        <li>Perforated viscus with peritonitis</li>
+                        <li>Intestinal ischemia/infarction</li>
+                        <li>Ascending cholangitis with biliary obstruction</li>
+                    </ul>
+                    <p style="margin-top: var(--space-8); font-weight: 600;">Action: URGENT surgical/interventional consultation</p>
+                </div>
+
+                <div class="flow-step warning" style="margin-bottom: var(--space-16);">
+                    <h4>Category 2: URGENT (6-24 hours)</h4>
+                    <p><strong>Timely intervention improves outcomes</strong></p>
+                    <ul style="margin-top: var(--space-8); line-height: 1.8;">
+                        <li>Intra-abdominal abscess requiring drainage</li>
+                        <li>Acute cholecystitis</li>
+                        <li>Obstructive pyelonephritis (infected hydronephrosis)</li>
+                        <li>Empyema requiring drainage</li>
+                        <li>Device-related infection (central line, prosthetic)</li>
+                    </ul>
+                    <p style="margin-top: var(--space-8); font-weight: 600;">Action: Early surgical/IR consultation, plan intervention within 12-24h</p>
+                </div>
+
+                <div class="flow-step early">
+                    <h4>Category 3: ELECTIVE/PLANNED (After Stabilization)</h4>
+                    <p><strong>Stabilize medically first, then plan definitive management</strong></p>
+                    <ul style="margin-top: var(--space-8); line-height: 1.8;">
+                        <li>Stable abscess amenable to antibiotics alone initially</li>
+                        <li>Infected necrotic tissue requiring demarcation (e.g., necrotizing pancreatitis)</li>
+                        <li>Osteomyelitis (chronic)</li>
+                    </ul>
+                    <p style="margin-top: var(--space-8); font-weight: 600;">Action: Optimize with antibiotics, consider delayed definitive procedure</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- OUTCOMES SECTION -->
+        <section id="outcomes" class="section">
+            <div class="card">
+                <h2>Mortality Risk Calculator</h2>
+                <div class="calculator">
+                    <div class="form-group">
+                        <label>Age:</label>
+                        <input type="number" id="risk-age" placeholder="Enter age" min="0" max="120">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Comorbidities (select all that apply):</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="risk-diabetes" value="1.75">
+                                <label for="risk-diabetes">Diabetes (1.5-2× risk)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="risk-ckd" value="2.5">
+                                <label for="risk-ckd">Chronic Kidney Disease (2-3× risk)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="risk-cancer" value="3.5">
+                                <label for="risk-cancer">Active Cancer (3-4× risk)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="risk-copd" value="2.25">
+                                <label for="risk-copd">COPD (2-2.5× risk)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="risk-immunosupp" value="3.5">
+                                <label for="risk-immunosupp">Immunosuppression (2-5× risk)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sepsis Severity:</label>
+                        <select id="risk-severity">
+                            <option value="10">SIRS (10% mortality)</option>
+                            <option value="20">Sepsis (20% mortality)</option>
+                            <option value="30">Severe Sepsis (20-40% mortality)</option>
+                            <option value="50">Septic Shock (40-60% mortality)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>SEP-1 Bundle Status:</label>
+                        <select id="risk-bundle">
+                            <option value="1.0">Bundle Met (baseline)</option>
+                            <option value="1.87">Bundle Failed (1.87× mortality)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn" onclick="calculateRisk()">Calculate Mortality Risk</button>
+                    <div id="risk-result"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Mortality by Severity and Treatment</h2>
+                <div class="chart-container">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/523fe4f0daf9e4ce030713805d5fd1e3/e1dfc415-ebd4-4259-b431-ef1157c58776/7923ede1.png" alt="Sepsis Mortality by Severity">
+                </div>
+                <div class="info-box">
+                    <strong>Key Finding:</strong> SEP-1 bundle compliance reduces septic shock mortality from 42.2% to 22.5% (47% relative risk reduction). This demonstrates the critical importance of early recognition and time-sensitive interventions.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Organ-Specific Complications</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Organ System</th>
+                            <th>Complication</th>
+                            <th>Frequency</th>
+                            <th>Acute Mortality Impact</th>
+                            <th>Long-term Sequelae</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="biomarker-row">
+                            <td><strong>Respiratory</strong></td>
+                            <td>ARDS</td>
+                            <td>40-50%</td>
+                            <td><span class="range-critical">40-50% mortality</span></td>
+                            <td>Pulmonary fibrosis, reduced exercise tolerance</td>
+                        </tr>
+                        <tr class="biomarker-row">
+                            <td><strong>Renal</strong></td>
+                            <td>Acute Kidney Injury</td>
+                            <td>30-50%</td>
+                            <td><span class="range-critical">50%+ if severe</span></td>
+                            <td>15-30% progress to CKD, some require dialysis</td>
+                        </tr>
+                        <tr class="biomarker-row">
+                            <td><strong>Cardiovascular</strong></td>
+                            <td>Septic Cardiomyopathy</td>
+                            <td>20-40%</td>
+                            <td><span class="range-elevated">Increases shock severity</span></td>
+                            <td>Usually reversible within 7-10 days</td>
+                        </tr>
+                        <tr class="biomarker-row">
+                            <td><strong>Hepatic</strong></td>
+                            <td>Hepatic Dysfunction</td>
+                            <td>15-20%</td>
+                            <td><span class="range-elevated">Impairs drug metabolism</span></td>
+                            <td>Usually resolves with sepsis treatment</td>
+                        </tr>
+                        <tr class="biomarker-row">
+                            <td><strong>Neurological</strong></td>
+                            <td>Sepsis-Associated Encephalopathy</td>
+                            <td>20-30%</td>
+                            <td><span class="range-elevated">Increases ICU stay</span></td>
+                            <td>30-60% have persistent cognitive impairment</td>
+                        </tr>
+                        <tr class="biomarker-row">
+                            <td><strong>Hematologic</strong></td>
+                            <td>DIC</td>
+                            <td>10-25%</td>
+                            <td><span class="range-critical">60-80% mortality if overt DIC</span></td>
+                            <td>Rare long-term effects if survived</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>Post-Sepsis Syndrome Recovery Projections</h2>
+                <p style="margin-bottom: var(--space-16);">Many sepsis survivors experience persistent physical, cognitive, and psychological impairments.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card" style="border-top: 4px solid var(--med-normal);">
+                        <div class="stat-value" style="color: var(--med-normal);">25%</div>
+                        <div class="stat-label">Complete Recovery</div>
+                    </div>
+                    <div class="stat-card" style="border-top: 4px solid var(--med-caution);">
+                        <div class="stat-value" style="color: var(--med-caution);">25%</div>
+                        <div class="stat-label">Partial Recovery</div>
+                    </div>
+                    <div class="stat-card" style="border-top: 4px solid var(--med-critical);">
+                        <div class="stat-value" style="color: var(--med-critical);">50%</div>
+                        <div class="stat-label">Persistent Impairment</div>
+                    </div>
+                    <div class="stat-card" style="border-top: 4px solid var(--color-primary);">
+                        <div class="stat-value" style="color: var(--color-primary);">30-50%</div>
+                        <div class="stat-label">Readmitted Within 90 Days</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-24); margin-bottom: var(--space-16);">Common Post-Sepsis Complications</h3>
+                <div class="grid-2">
+                    <div class="info-box">
+                        <h4>Physical Impairments (40-80%)</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Muscle weakness and fatigue</li>
+                            <li>Reduced exercise tolerance</li>
+                            <li>Joint pain and mobility limitations</li>
+                            <li>Difficulty with ADLs</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <h4>Cognitive Dysfunction (30-60%)</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Memory impairment</li>
+                            <li>Attention and concentration deficits</li>
+                            <li>Executive function problems</li>
+                            <li>Comparable to mild-moderate TBI</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <h4>Psychological (30-50%)</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>PTSD symptoms</li>
+                            <li>Depression</li>
+                            <li>Anxiety</li>
+                            <li>Sleep disturbances</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <h4>Organ-Specific (Variable)</h4>
+                        <ul style="line-height: 1.8;">
+                            <li>Chronic kidney disease</li>
+                            <li>Restrictive lung disease</li>
+                            <li>Cardiac dysfunction</li>
+                            <li>Increased cardiovascular events</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-24); margin-bottom: var(--space-16);">Recovery Timeline</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">Hospital Discharge to 1 Month</div>
+                        <p>Severe weakness, high dependence on caregivers, rehabilitation needs assessment</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">1-3 Months Post-Discharge</div>
+                        <p>Gradual physical recovery, persistent fatigue, cognitive deficits becoming apparent, rehabilitation ongoing</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">3-6 Months Post-Discharge</div>
+                        <p>Plateau in physical recovery for many, persistent cognitive and psychological symptoms, return to work challenges</p>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">6-12 Months Post-Discharge</div>
+                        <p>New baseline established; 50% have persistent functional impairment compared to pre-sepsis status</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Discharge Planning Checklist</h2>
+                <div class="grid-2">
+                    <div class="card" style="background-color: rgba(52, 152, 219, 0.05);">
+                        <h3>Pre-Discharge Education</h3>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-education1">
+                                <label for="dc-education1">Explain post-sepsis syndrome</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-education2">
+                                <label for="dc-education2">Review medications and adherence</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-education3">
+                                <label for="dc-education3">Discuss warning signs of deterioration</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-education4">
+                                <label for="dc-education4">Provide written care instructions</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" style="background-color: rgba(52, 152, 219, 0.05);">
+                        <h3>Follow-up Appointments</h3>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-followup1">
+                                <label for="dc-followup1">PCP within 7-14 days</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-followup2">
+                                <label for="dc-followup2">Infectious disease (if applicable)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-followup3">
+                                <label for="dc-followup3">Specialty follow-up (organ-specific)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-followup4">
+                                <label for="dc-followup4">Cognitive assessment referral</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" style="background-color: rgba(52, 152, 219, 0.05);">
+                        <h3>Rehabilitation Services</h3>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-rehab1">
+                                <label for="dc-rehab1">Physical therapy assessment</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-rehab2">
+                                <label for="dc-rehab2">Occupational therapy for ADLs</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-rehab3">
+                                <label for="dc-rehab3">Cognitive rehabilitation</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dc-rehab4">
+                                <label for="dc-rehab4">Psychological counseling</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" style="background-color: rgba(231, 76, 60, 0.1);">
+                        <h3>Warning Signs (Return to Hospital)</h3>
+                        <ul style="line-height: 2;">
+                            <li>Fever &gt;38.3°C (101°F)</li>
+                            <li>Confusion or altered mental status</li>
+                            <li>Severe shortness of breath</li>
+                            <li>Chest pain or rapid heart rate</li>
+                            <li>Decreased urine output</li>
+                            <li>Worsening wound infection</li>
+                            <li>Inability to eat/drink</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p class="disclaimer"><strong>Medical Disclaimer:</strong> This dashboard is for educational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of qualified health providers with questions regarding medical conditions.</p>
+        <p><strong>Evidence-Based Sources:</strong> Surviving Sepsis Campaign 2021 Guidelines | CDC Sepsis Resources | JAMA Sepsis Reviews | Sepsis-3 Consensus Definitions | SCCM/ESICM Guidelines</p>
+        <p style="margin-top: var(--space-8);">© 2025 Sepsis Management &amp; Education Dashboard | Evidence-Based Clinical Decision Support</p>
+    </footer>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Tab switching
+        function showTab(tabId) {
+            // Get parent card to scope tab switching
+            const parentCard = event.target.closest('.card');
+            
+            // Hide all tab contents in this card
+            const tabContents = parentCard.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Show selected tab
+            const selectedTab = parentCard.querySelector(`#${tabId}`);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Update tab buttons in this card
+            const tabBtns = parentCard.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Toggle flow details
+        function toggleDetails(element) {
+            const details = element.querySelector('.flow-details');
+            if (details) {
+                details.classList.toggle('show');
+            }
+        }
+
+        // SOFA Score Calculator
+        function calculateSOFA() {
+            const resp = parseInt(document.getElementById('sofa-resp').value);
+            const coag = parseInt(document.getElementById('sofa-coag').value);
+            const liver = parseInt(document.getElementById('sofa-liver').value);
+            const cardio = parseInt(document.getElementById('sofa-cardio').value);
+            const neuro = parseInt(document.getElementById('sofa-neuro').value);
+            const renal = parseInt(document.getElementById('sofa-renal').value);
+            
+            const total = resp + coag + liver + cardio + neuro + renal;
+            
+            let resultClass = 'result-low';
+            let interpretation = '';
+            
+            if (total < 2) {
+                resultClass = 'result-low';
+                interpretation = 'Low risk - SOFA increase <2 does not meet sepsis criteria';
+            } else if (total >= 2 && total < 6) {
+                resultClass = 'result-moderate';
+                interpretation = 'SEPSIS DIAGNOSED - SOFA ≥2 with suspected infection. Mortality ~10-20%';
+            } else if (total >= 6 && total < 12) {
+                resultClass = 'result-high';
+                interpretation = 'SEVERE SEPSIS - High risk of poor outcome. Mortality 20-40%';
+            } else {
+                resultClass = 'result-high';
+                interpretation = 'CRITICAL - Multiple organ failure likely. Mortality >50%';
+            }
+            
+            const resultDiv = document.getElementById('sofa-result');
+            resultDiv.innerHTML = `
+                <div class="result-box ${resultClass}">
+                    <div style="font-size: var(--font-size-3xl); margin-bottom: var(--space-8);">SOFA Score: ${total}/24</div>
+                    <div style="font-size: var(--font-size-base);">${interpretation}</div>
+                    <div style="margin-top: var(--space-12); font-size: var(--font-size-sm);">Breakdown: Resp=${resp}, Coag=${coag}, Liver=${liver}, Cardio=${cardio}, Neuro=${neuro}, Renal=${renal}</div>
+                </div>
+            `;
+        }
+
+        // Fluid Calculator
+        function calculateFluid() {
+            const weight = parseFloat(document.getElementById('fluid-weight').value);
+            
+            if (!weight || weight <= 0) {
+                alert('Please enter a valid weight');
+                return;
+            }
+            
+            const fluidVolume = weight * 30;
+            
+            const resultDiv = document.getElementById('fluid-result');
+            resultDiv.innerHTML = `
+                <div class="result-box result-moderate" style="margin-top: var(--space-16);">
+                    <div style="font-size: var(--font-size-2xl); margin-bottom: var(--space-8);">Initial Fluid Bolus: ${fluidVolume.toFixed(0)} mL</div>
+                    <div style="font-size: var(--font-size-base); margin-bottom: var(--space-8);">30 mL/kg for patient weighing ${weight} kg</div>
+                    <div style="font-size: var(--font-size-sm); margin-top: var(--space-12); text-align: left;">
+                        <strong>Administration:</strong><br>
+                        • Administer as rapidly as possible (over 1-3 hours)<br>
+                        • Preferred: Lactated Ringer's or Plasma-Lyte<br>
+                        • Alternative: 0.9% Normal Saline<br>
+                        • Reassess after bolus: perfusion, lung sounds, volume status<br>
+                        • Stop fluids when adequate perfusion achieved
+                    </div>
+                </div>
+            `;
+        }
+
+        // Risk Calculator
+        function calculateRisk() {
+            const age = parseInt(document.getElementById('risk-age').value);
+            const severity = parseInt(document.getElementById('risk-severity').value);
+            const bundleMultiplier = parseFloat(document.getElementById('risk-bundle').value);
+            
+            if (!age || age <= 0) {
+                alert('Please enter a valid age');
+                return;
+            }
+            
+            let baseRisk = severity;
+            
+            // Age multiplier
+            let ageMultiplier = 1.0;
+            if (age >= 65) {
+                ageMultiplier = 1.3; // 30% increased risk
+            }
+            if (age >= 75) {
+                ageMultiplier = 1.5; // 50% increased risk
+            }
+            if (age >= 85) {
+                ageMultiplier = 1.8; // 80% increased risk
+            }
+            
+            // Comorbidity multipliers
+            let comorbidityMultiplier = 1.0;
+            
+            const diabetes = document.getElementById('risk-diabetes');
+            const ckd = document.getElementById('risk-ckd');
+            const cancer = document.getElementById('risk-cancer');
+            const copd = document.getElementById('risk-copd');
+            const immunosupp = document.getElementById('risk-immunosupp');
+            
+            if (diabetes && diabetes.checked) {
+                comorbidityMultiplier *= parseFloat(diabetes.value);
+            }
+            if (ckd && ckd.checked) {
+                comorbidityMultiplier *= parseFloat(ckd.value);
+            }
+            if (cancer && cancer.checked) {
+                comorbidityMultiplier *= parseFloat(cancer.value);
+            }
+            if (copd && copd.checked) {
+                comorbidityMultiplier *= parseFloat(copd.value);
+            }
+            if (immunosupp && immunosupp.checked) {
+                comorbidityMultiplier *= parseFloat(immunosupp.value);
+            }
+            
+            // Calculate final risk
+            let finalRisk = baseRisk * ageMultiplier * comorbidityMultiplier * bundleMultiplier;
+            
+            // Cap at 95%
+            if (finalRisk > 95) finalRisk = 95;
+            
+            let resultClass = 'result-low';
+            let riskLevel = '';
+            
+            if (finalRisk < 15) {
+                resultClass = 'result-low';
+                riskLevel = 'Low Risk';
+            } else if (finalRisk >= 15 && finalRisk < 40) {
+                resultClass = 'result-moderate';
+                riskLevel = 'Moderate Risk';
+            } else {
+                resultClass = 'result-high';
+                riskLevel = 'High Risk';
+            }
+            
+            const resultDiv = document.getElementById('risk-result');
+            resultDiv.innerHTML = `
+                <div class="result-box ${resultClass}">
+                    <div style="font-size: var(--font-size-3xl); margin-bottom: var(--space-8);">${riskLevel}</div>
+                    <div style="font-size: var(--font-size-2xl); margin-bottom: var(--space-8);">Estimated Mortality: ${finalRisk.toFixed(1)}%</div>
+                    <div style="font-size: var(--font-size-sm); margin-top: var(--space-12); text-align: left;">
+                        <strong>Risk Factors Applied:</strong><br>
+                        • Base severity risk: ${severity}%<br>
+                        • Age adjustment: ${((ageMultiplier - 1) * 100).toFixed(0)}% increase<br>
+                        • Comorbidity impact: ${((comorbidityMultiplier - 1) * 100).toFixed(0)}% increase<br>
+                        • Bundle compliance: ${bundleMultiplier === 1.0 ? 'Met (baseline)' : 'Failed (87% increase)'}<br><br>
+                        <strong>Note:</strong> This is an estimate based on population data. Individual outcomes vary based on treatment response, source control, and complication development.
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

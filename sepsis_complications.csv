@@ -1,0 +1,8 @@
+Organ System,Complication,Frequency (%),Mortality Impact,Long-Term Sequelae,Recovery Timeline
+Respiratory,ARDS,18-36,40-50% if ARDS alone,Chronic lung disease,Weeks to months
+Renal,Acute Kidney Injury (AKI),30-50,Severe: 50%+,Chronic kidney disease,Weeks to months
+Hepatic,Liver Dysfunction,15-20,20-30% increase,Cirrhosis risk,Variable
+Neurological,Encephalopathy/Delirium,20-30,Chronic cognitive issues,Post-sepsis syndrome,Months to years
+Cardiovascular,Cardiac dysfunction,15-25,Increased mortality 2-3x,Cardiomyopathy,Variable
+Coagulation,Disseminated Intravascular Coagulation (DIC),10-15,Very high (50-80%),Thrombotic events,Days to weeks
+Metabolic,Lacticacidosis,20-30,Associated with poor prognosis,Metabolic dysfunction,Days

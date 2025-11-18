@@ -1,0 +1,8 @@
+Time Point,Task,Requirement,Evidence Quality,Target Outcome
+3-Hour Bundle,Measure Lactate Level,All patients,Low,Assess perfusion
+3-Hour Bundle,Blood Cultures (before antibiotics),All patients,High,Organism identification
+3-Hour Bundle,Broad-Spectrum Antibiotics,All patients,Strong,Early source elimination
+3-Hour Bundle,Crystalloid Fluid (30 mL/kg),If hypotensive or lactate ≥4,Weak-Low,Fluid resuscitation
+6-Hour Bundle,Re-measure Lactate (if initially elevated),If initially elevated,Moderate,Monitor perfusion
+6-Hour Bundle,Reassess Volume Status,All patients,Moderate,Guide therapy
+6-Hour Bundle,Vasopressor if MAP <65 mmHg,If hypotension persists,High,Maintain organ perfusion

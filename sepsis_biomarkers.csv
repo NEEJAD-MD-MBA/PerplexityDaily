@@ -1,0 +1,5 @@
+Biomarker,Normal Range,Elevated in Sepsis,Sensitivity,Specificity,AUC-ROC for Diagnosis,Clinical Use
+Procalcitonin (PCT),<0.1 ng/mL,>10 ng/mL,88%,70%,0.82,Best for bacterial sepsis
+C-Reactive Protein (CRP),<10 mg/L,>20 mg/mL,85%,68%,0.78,General inflammation
+Lactate,<2 mmol/L,>4 mmol/L,Variable,High,0.81 (severe sepsis),Perfusion marker
+Neutrophil-Lymphocyte Count Ratio (NLCR),<5:1,>10:1,68%,70%,0.71 (positive cultures),Immune response
