@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Web Application Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .results.active {
+            display: block;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        
+        .step-header {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .step-content {
+            color: #666;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+        
+        .agent-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+            color: #555;
+        }
+        
+        .info-box li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Multi-Agent Web Application Builder</h1>
+            <p>Coordinating Perplexity and ChatGPT agents to build your web application</p>
+        </div>
+        
+        <div class="card">
+            <div class="info-box">
+                <h3>How it works:</h3>
+                <ul>
+                    <li><strong>Perplexity Agent</strong>: Researches current best practices and technologies</li>
+                    <li><strong>ChatGPT Agent</strong>: Plans architecture and generates implementation details</li>
+                    <li><strong>Coordination</strong>: Both agents work together to create a comprehensive guide</li>
+                </ul>
+            </div>
+            
+            <form id="buildForm">
+                <div class="input-group">
+                    <label for="goal">What web application do you want to build?</label>
+                    <textarea 
+                        id="goal" 
+                        name="goal" 
+                        placeholder="Example: A task management application with real-time collaboration features, user authentication, and mobile responsive design"
+                        required
+                    ></textarea>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">
+                    🚀 Build Application Plan
+                </button>
+            </form>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="card">
+                <div class="spinner"></div>
+                <p style="color: #667eea; font-weight: 600;">
+                    Coordinating agents to build your application plan...
+                </p>
+                <p style="color: #999; margin-top: 10px;">
+                    This may take a few minutes as agents research and plan your application.
+                </p>
+            </div>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="card">
+                <div id="resultsContent"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('buildForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const goal = document.getElementById('goal').value.trim();
+            if (!goal) return;
+            
+            // Show loading, hide results
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('submitBtn').disabled = true;
+            
+            try {
+                const response = await fetch('/api/build', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ goal })
+                });
+                
+                const data = await response.json();
+                
+                // Hide loading
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('submitBtn').disabled = false;
+                
+                if (data.success) {
+                    displayResults(data.results);
+                } else {
+                    displayError(data.error || 'An error occurred');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('submitBtn').disabled = false;
+                displayError('Failed to communicate with server: ' + error.message);
+            }
+        });
+        
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            const contentDiv = document.getElementById('resultsContent');
+            
+            let html = '<div class="success-message">✓ Application plan generated successfully!</div>';
+            
+            html += '<h2 style="margin-bottom: 20px; color: #333;">Process Steps:</h2>';
+            
+            results.steps.forEach((step, index) => {
+                html += `
+                    <div class="step">
+                        <div class="step-header">
+                            <span>Step ${index + 1}: ${step.step}</span>
+                            <span class="agent-badge">${step.agent}</span>
+                        </div>
+                        <div class="step-content">${escapeHtml(step.output.substring(0, 500))}${step.output.length > 500 ? '...' : ''}</div>
+                    </div>
+                `;
+            });
+            
+            if (results.output && results.output.final_guide) {
+                html += '<h2 style="margin: 30px 0 20px; color: #333;">Final Implementation Guide:</h2>';
+                html += `<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-wrap; line-height: 1.6;">${escapeHtml(results.output.final_guide)}</div>`;
+            }
+            
+            contentDiv.innerHTML = html;
+            resultsDiv.classList.add('active');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function displayError(error) {
+            const resultsDiv = document.getElementById('results');
+            const contentDiv = document.getElementById('resultsContent');
+            
+            contentDiv.innerHTML = `<div class="error-message">✗ Error: ${escapeHtml(error)}</div>`;
+            resultsDiv.classList.add('active');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
